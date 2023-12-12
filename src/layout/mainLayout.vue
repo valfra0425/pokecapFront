@@ -4,30 +4,30 @@
 <template>
     <v-row class="container">
         <v-col cols="4" md="3" lg="2" xl="2" class="bara-lateral">
-            <a href="">
+            <router-link to="/">
                 <div class="div-lateral">
                     <span>Pokedex</span>
                     <div class="icon">
                         <img src="../assets/3186870_game_pokedex_video_icon.png">
                     </div>
                 </div>
-            </a>
-            <a href="">
+            </router-link>
+            <router-link to="/adventure">
                 <div class="div-lateral">
                     <span>Aventura</span>
                     <div class="icon">
                         <img src="../assets/4205332_eco_ecology_grass_nature_organic_icon.png">
                     </div>
                 </div>
-            </a>
-            <a href="">
+            </router-link>
+            <router-link to="/about">
                 <div class="div-lateral">
                     <span>Pokémons</span>
                     <div class="icon">
                         <img src="../assets/1563649_pokeball_pokebola_pokemon_pokemongo_icon.png">
                     </div>
                 </div>
-            </a>
+            </router-link>
         </v-col>
         <v-col class="content">
             <div class="bar">
