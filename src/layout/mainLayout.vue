@@ -3,7 +3,7 @@
 
 <template>
     <v-row class="container">
-        <v-col sm="4" md="3" lg="2" class="bara-lateral">
+        <v-col cols="4" md="3" lg="2" xl="2" class="bara-lateral">
             <a href="">
                 <div class="div-lateral">
                     <span>Pokedex</span>
@@ -47,19 +47,18 @@
     margin: 0px;
 }
 .bara-lateral {
-    padding: 50px 0px 0px 0px;
+    padding: 5% 0px 0px 0px;
     background-color: rgb(255, 0, 0);
 }
 .div-lateral {
     position: relative;
     display: flex;
-    align-items: center;
-    padding: 10px;
+    padding: 15px;
     background-color: rgb(255, 255, 255);
     color: #000;
-    margin: 60px 0px;
-    height: 100px;
-    width: 95%;
+    margin: 20px 0px;
+    height: 90px;
+    width: 90%;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
     align-items: center;
@@ -82,9 +81,10 @@
 }
 .content {
     padding: 0;
+    background-color: #24282b;
     background-image: url(../assets/pikachu.jpg);
-    background-size: cover;
-    background-position: center;
+    background-size: contain;
+    background-position: right bottom;
 }
 .bar {
     display: flex;
@@ -92,11 +92,51 @@
     align-items: center;
     background-color: #ffffff;
     color: #000000;
-    height: 50px;
-    
+    height: 5%;
   }
 
-@media (max-width: 425px) and (min-width: 768px){
-
+@media (min-width: 500px) and (max-width: 768px){
+.bara-lateral {
+    padding: 10% 0px 0px 0px;
+}
+.div-lateral {
+    padding: 5px;
+    height: 80px;
+    width: 90%;
+    font-size: 18px;
+}
+.icon {
+    width: 40px;
+    height: 40px;
+}
+.icon img {
+    width: 40px;
+    height: 40px;
+}
+.content {
+    background-image: url(../assets/pikachu-veertical.jpg);
+    background-position: center;
+}
+}
+@media (min-width: 600px) and (max-width: 768px){
+.div-lateral {
+    font-size: 24px;
+}
+}
+@media (min-width: 769px) and (max-width: 1024px){
+.div-lateral {
+    height: 80px;
+    font-size: 26px;
+}
+.content {
+    background-image: url(../assets/pikachu-veertical.jpg);
+    background-position: center;
+}
+}
+@media (min-width: 950px) and (max-width: 1024px){
+.content {
+    background-image: url(../assets/pikachu.jpg);
+    background-position: bottom right;
+}
 }
 </style>
