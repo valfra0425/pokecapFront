@@ -8,7 +8,7 @@
                 <div class="div-lateral">
                     <span>Pokedex</span>
                     <div class="icon">
-                        <img src="../assets/3186870_game_pokedex_video_icon.png">
+                        <img src="../assets/icons/pokedex.png">
                     </div>
                 </div>
             </router-link>
@@ -16,7 +16,7 @@
                 <div class="div-lateral">
                     <span>Aventura</span>
                     <div class="icon">
-                        <img src="../assets/4205332_eco_ecology_grass_nature_organic_icon.png">
+                        <img src="../assets/icons/adventure.png">
                     </div>
                 </div>
             </router-link>
@@ -24,7 +24,7 @@
                 <div class="div-lateral">
                     <span>Pokémons</span>
                     <div class="icon">
-                        <img src="../assets/1563649_pokeball_pokebola_pokemon_pokemongo_icon.png">
+                        <img src="../assets/icons/pokeball_pokebola.png">
                     </div>
                 </div>
             </router-link>
@@ -82,7 +82,7 @@
 .content {
     padding: 0;
     background-color: #24282b;
-    background-image: url(../assets/pikachu.jpg);
+    background-image: url(../assets/wallpaper/pikachu.jpg);
     background-size: contain;
     background-position: right bottom;
 }
@@ -101,7 +101,7 @@
 }
 .div-lateral {
     padding: 5px;
-    height: 80px;
+    height: 70px;
     width: 90%;
     font-size: 18px;
 }
@@ -114,7 +114,7 @@
     height: 40px;
 }
 .content {
-    background-image: url(../assets/pikachu-veertical.jpg);
+    background-image: url(../assets/wallpaper/pikachu-veertical.jpg);
     background-position: center;
 }
 }
@@ -125,17 +125,17 @@
 }
 @media (min-width: 769px) and (max-width: 1024px){
 .div-lateral {
-    height: 80px;
+    height: 70px;
     font-size: 26px;
 }
 .content {
-    background-image: url(../assets/pikachu-veertical.jpg);
+    background-image: url(../assets/wallpaper/pikachu-veertical.jpg);
     background-position: center;
 }
 }
 @media (min-width: 950px) and (max-width: 1024px){
 .content {
-    background-image: url(../assets/pikachu.jpg);
+    background-image: url(../assets/wallpaper/pikachu.jpg);
     background-position: bottom right;
 }
 }
