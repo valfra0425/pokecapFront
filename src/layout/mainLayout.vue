@@ -29,7 +29,7 @@
                 </div>
             </router-link>
         </v-col>
-        <v-col class="content">
+        <v-col cols="8" md="9" lg="10" xl="10" class="content">
             <div class="bar">
                 <span>Treinador: A</span>
                 <span>Nº de pokémons: 0</span>
@@ -124,6 +124,9 @@
 }
 }
 @media (min-width: 769px) and (max-width: 1024px){
+.bara-lateral {
+    padding: 8% 0px 0px 0px;
+}
 .div-lateral {
     height: 70px;
     font-size: 26px;
