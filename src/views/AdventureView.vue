@@ -1,11 +1,41 @@
 <script setup lang="ts">
+import { ref } from "vue"
+
+function randInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var qtdRounds = ref<number>()
+var atualRound = ref<number>()
+var pokeball = ref<number>()
+var greatball = ref<number>()
+var ultraball = ref<number>()
+var masterball = ref<number>()
+var started = ref<boolean>()
+var finished = ref<boolean>()
+
+
+function start() {
+    qtdRounds.value = randInt(6, 12);
+    atualRound.value = 1;
+    pokeball.value = randInt(1, 10);
+    greatball.value = randInt(0, 5);
+    ultraball.value = randInt(0, 3);
+    masterball.value = (Math.random() <= 0.05 ? 1 : 0);
+    started.value = true;
+}
 </script>
 
 <template>
     <div class="container">
         <div id="adventure">
             <div id="alerts">
-                <h1>Comece a sua aventura pokémon!</h1>
+                <h1 id="round" v-if="started"> Round {{ atualRound }} </h1>
+                <h1 v-if="!started">Comece a sua aventura pokémon!</h1>
+                <div v-else>
+                    <h2 v-if="true">Capturado!</h2>
+                    <h2 v-else>Falhou!</h2>
+                </div>
             </div>
             <div id="container_pkm">
                 <div id="main_pkm">
@@ -13,37 +43,41 @@
                 </div>
             </div>
         </div>
-        <div id="div-pokeballs">
-            <div id="pokeballs">
+        <v-row id="div-pokeballs">
+            <v-col cols="12" id="pokeballs">
                 <div class="pokeball">
                     <img class="img-pokeball" src="../assets/pkb/pokeball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? pokeball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
                     <img class="img-pokeball" src="../assets/pkb/greatball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? greatball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
                     <img class="img-pokeball" src="../assets/pkb/ultraball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? ultraball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
                     <img class="img-pokeball" src="../assets/pkb/masterball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? masterball : "?" }}</span>
                     </div>
                 </div>
-            </div>
-            <div id="control-div">
-                <v-btn size="x-large">Start</v-btn>
-            </div>
-        </div>
+            </v-col>
+            <v-col cols="12" class="control-div" v-if="!started">
+                <v-btn size="x-large" @click="start()">Start</v-btn>
+            </v-col>
+            <v-col cols="6" class="control-div" v-else>
+                <v-btn class="btn-width" size="x-large">Next Round</v-btn>
+                <v-btn class="btn-width" size="x-large">Finish</v-btn>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -56,6 +90,7 @@
     height: 70%;
 }
 #alerts {
+    position: relative;
     display: flex;
     height: 20%;
     justify-content: center;
@@ -82,6 +117,8 @@
 }
 #div-pokeballs {
     height: 30%;
+    display: flex;
+    justify-content: center;
 }
 #pokeballs {
     height: 60%;
@@ -106,11 +143,18 @@
     color: black;
     font-size: 20px;
 }
-#control-div {
+.control-div {
     height: 40%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-around;
+}
+#round {
+    position: absolute;
+    left: 20px;
+}
+.btn-width {
+    width: 150px;
 }
 
 @media (min-width: 500px) and (max-width: 768px){
@@ -124,7 +168,7 @@
 .img-pokeball {
     height: 40%;
 }
-#control-div {
+.control-div {
     height: 30%;
 }
 }
@@ -158,7 +202,7 @@
 .img-pokeball {
     height: 50%;
 }
-#control-div {
+.control-div {
     height: 30%;
 }
 }
