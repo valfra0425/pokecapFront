@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, onBeforeMount } from "vue"
+import { usePkmStore } from "@/stores/pkmStore"
 
 function randInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+const pkmStore = usePkmStore();
+const pkm = ref("");
+
+onBeforeMount(async () => {
+    pkm.value = (await pkmStore.getPkm(1)).name
+})
 
 var qtdRounds = ref<number>()
 var atualRound = ref<number>()
