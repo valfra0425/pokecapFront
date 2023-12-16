@@ -28,6 +28,14 @@ const router = createRouter({
       meta: {
         layout: mainLayout,
       }
+    },
+    {
+      path: '/trainer',
+      name: 'trainer',
+      component: () => import('../views/TrainerView.vue'),
+      meta: {
+        layout: mainLayout,
+      }
     }
   ]
 })
