@@ -1,11 +1,21 @@
 <script setup lang="ts">
+import { usePkmStore } from '@/stores/pkmStore';
+import { onBeforeMount, ref } from 'vue';
+
+const pkmStore = usePkmStore();
+const pkm = ref("");
+
+onBeforeMount(async () => {
+    pkm.value = (await pkmStore.getPkm(1)).name
+    
+});
 </script>
 
 <template>
     <div class="container">
         <div id="adventure">
             <div id="alerts">
-                <h1>Comece a sua aventura pokémon!</h1>
+                <h1>{{ pkm }}</h1>
             </div>
             <div id="container_pkm">
                 <div id="main_pkm">
