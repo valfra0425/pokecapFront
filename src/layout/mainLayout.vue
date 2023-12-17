@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+var username: string;
+function login(){
 
+}
+</script>
 <template>
   <v-row class="container">
     <v-col cols="4" md="3" lg="2" xl="2" class="bara-lateral">
@@ -29,7 +33,13 @@
       </router-link>
     </v-col>
     <v-col cols="8" md="9" lg="10" xl="10" class="content">
-      <div class="bar">
+      <div class="bar-login" v-if="true">
+        <v-form @submit.prevent="login" class="bar-form">
+          <input v-model="username" type="text" placeholder="Nome" required class="custom-input">
+          <v-btn color="red" type="submit">Login</v-btn>
+        </v-form>
+      </div>
+      <div class="bar" v-else>
         <span>Treinador: A</span>
         <span>Nº de pokémons: 0</span>
       </div>
@@ -92,6 +102,26 @@
   background-color: #ffffff;
   color: #000000;
   height: 5%;
+}
+.bar-login {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  height: 5%;
+  padding-left: 10px;
+}
+.bar-form {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.custom-input {
+  width: 200px;
+  margin-right: 10px;
+  height: 100%;
+  font-size: medium;
 }
 
 @media (min-width: 500px) and (max-width: 768px) {
