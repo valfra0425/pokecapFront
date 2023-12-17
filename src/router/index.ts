@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import mainLayout from '../layout/mainLayout.vue'
+import StartView from '../views/StartView.vue'
+import PokemonViews from '@/views/PokemonView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,7 +12,7 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        layout: mainLayout,
+        layout: mainLayout
       }
     },
     {
@@ -18,7 +20,7 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
       meta: {
-        layout: mainLayout,
+        layout: mainLayout
       }
     },
     {
@@ -26,7 +28,20 @@ const router = createRouter({
       name: 'adventure',
       component: () => import('../views/AdventureView.vue'),
       meta: {
-        layout: mainLayout,
+        layout: mainLayout
+      }
+    },
+    {
+      path: '/start',
+      name: 'start',
+      component: StartView
+    },
+    {
+      path: '/pokemons',
+      name: 'pokemons',
+      component: PokemonViews,
+      meta: {
+        layout: mainLayout
       }
     }
   ]
