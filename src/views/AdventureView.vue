@@ -1,71 +1,281 @@
 <script setup lang="ts">
-import { usePkmStore } from '@/stores/pkmStore';
-import { onBeforeMount, ref } from 'vue';
+import { ref, onBeforeMount } from "vue"
+import { usePkmStore } from "@/stores/pkmStore"
 
+// função para conseguir um inteiro aleatorio 
+function randInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// função para aguardar 1 segundo
+async function awaitOnesecond(): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+}
+
+// função para aguardar 1 segundo
+async function awaitPkm(): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, 250);
+  });
+}
+
+// store
 const pkmStore = usePkmStore();
-const pkm = ref("");
 
 onBeforeMount(async () => {
-    pkm.value = (await pkmStore.getPkm(1)).name
-    
-});
+    // pkm não pode estar vazio ao iniciar
+    getPkm()
+})
+
+
+// variaveis da página
+var pkm = ref<any>(null);
+var qtdRounds = ref<number>(0)
+var atualRound = ref<number>(0)
+var pokeball = ref<number>(0)
+var greatball = ref<number>(0)
+var ultraball = ref<number>(0)
+var masterball = ref<number>(0)
+var started = ref<boolean>(false)
+var finished = ref<boolean>(false)
+var captured = ref<boolean>(false)
+var failed = ref<boolean>(false)
+var timeOut = false
+
+async function getPkm() {
+    let pkm1 = (await pkmStore.getPkm(randInt(1, 151)))
+    let pkm2 = (await pkmStore.getPkm(randInt(1, 151)))
+    let pkm3 = (await pkmStore.getPkm(randInt(1, 151)))
+    let pkm4 = (await pkmStore.getPkm(randInt(1, 151)))
+
+
+    pkm.value = pkm1
+    await awaitPkm()
+    pkm.value = pkm2
+    await awaitPkm()
+    pkm.value = pkm3
+    await awaitPkm()
+    pkm.value = pkm4
+}
+
+function start() {
+    getPkm()
+    qtdRounds.value = randInt(6, 12);
+    atualRound.value = 1;
+    pokeball.value = randInt(1, 10);
+    greatball.value = randInt(0, 5);
+    ultraball.value = randInt(0, 3);
+    masterball.value = (Math.random() <= 0.05 ? 1 : 0);
+    started.value = true;
+    finished.value = false
+}
+
+function finish(){
+    finished.value = true
+    let pkb1 = Math.floor(pokeball.value / 2)
+    let pkb2 = Math.floor(greatball.value / 2)
+    let pkb3 = Math.floor(ultraball.value / 2)
+}
+
+function nextRound(){
+    if (qtdRounds.value == atualRound.value){
+        finish()
+    }
+    atualRound.value = atualRound.value + 1
+    getPkm()
+}
+
+function verifyPkb(){
+    if (started.value){
+        if (pokeball.value == 0 && greatball.value == 0 && ultraball.value == 0 && masterball.value == 0){
+            finish()
+        }
+    }
+}
+
+async function captured_pkm(){
+    captured.value = true
+    failed.value = false
+    await awaitOnesecond();
+    captured.value = false
+}
+
+async function failed_pkm(){
+    captured.value = false
+    failed.value = true
+    await awaitOnesecond();
+    failed.value = false
+}
+
+async function capture_pokeball() {
+    if (!timeOut){
+        timeOut = true
+        if (started.value && !finished.value){
+            if (pokeball.value > 0){
+                let sucess = (Math.random() <= 0.25 ? true : false)
+                if (sucess){
+                    captured_pkm()
+                    await awaitOnesecond();
+                    nextRound()
+                } else {
+                    failed_pkm()
+                    await awaitOnesecond();
+                }
+                pokeball.value = pokeball.value - 1
+            }
+        }
+        timeOut = false
+        verifyPkb()
+    }
+}
+
+async function capture_greatball() {
+    if (!timeOut){
+        timeOut = true
+        if (started.value && !finished.value){
+            if (greatball.value > 0){
+                let sucess = (Math.random() <= 0.50 ? true : false)
+                if (sucess){
+                    captured_pkm()
+                    await awaitOnesecond();
+                    nextRound()
+                } else {
+                    failed_pkm()
+                    await awaitOnesecond();
+                }
+                greatball.value = greatball.value - 1
+            }
+        }
+        timeOut = false
+        verifyPkb()
+    }
+}
+
+async function capture_ultraball() {
+    if (!timeOut){
+        timeOut = true
+        if (started.value && !finished.value){
+            if (ultraball.value > 0){
+                let sucess = (Math.random() <= 0.75 ? true : false)
+                if (sucess){
+                    captured_pkm()
+                    await awaitOnesecond();
+                    nextRound()
+                } else {
+                    failed_pkm()
+                    await awaitOnesecond();
+                }
+                ultraball.value = ultraball.value - 1
+            }
+        }
+        timeOut = false
+        verifyPkb()
+    }
+}
+
+async function capture_masterball() {
+    if (!timeOut){
+        timeOut = true
+        if (started.value && !finished.value){
+            if (masterball.value > 0){
+                captured_pkm()
+                await awaitOnesecond();
+                nextRound()
+                masterball.value = masterball.value - 1
+                timeOut = false
+                verifyPkb()
+            }
+        }
+    }
+}
+
 </script>
 
 <template>
     <div class="container">
         <div id="adventure">
             <div id="alerts">
-                <h1>{{ pkm }}</h1>
+                <h1 id="round" v-if="started && !finished"> Round {{ atualRound }} </h1>
+                <h1 v-if="finished">Esse é o fim da sua aventura!</h1>
+                <h1 v-if="!started">Comece a sua aventura pokémon!</h1>
+                <div class="alert" v-else>
+                    <h2 v-if="captured">Capturado!</h2>
+                    <h2 v-if="failed">Falhou!</h2>
+                </div>
             </div>
             <div id="container_pkm">
-                <div id="main_pkm">
+                <div v-if="!started || finished" id="main_pkm">
                     <img class="img_pkm" src="../assets/adventure.png">
                 </div>
+                <div class="background-pkm" v-else>
+                    <img class="pkm_size" :src="pkm.sprite"> 
+                </div>
             </div>
         </div>
-        <div id="div-pokeballs">
-            <div id="pokeballs">
+        <v-row id="div-pokeballs">
+            <v-col cols="12" id="pokeballs">
                 <div class="pokeball">
-                    <img class="img-pokeball" src="../assets/pkb/pokeball.png">
+                    <img @click="capture_pokeball()" class="img-pokeball" src="../assets/pkb/pokeball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? pokeball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
-                    <img class="img-pokeball" src="../assets/pkb/greatball.png">
+                    <img @click="capture_greatball()" class="img-pokeball" src="../assets/pkb/greatball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? greatball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
-                    <img class="img-pokeball" src="../assets/pkb/ultraball.png">
+                    <img @click="capture_ultraball()" class="img-pokeball" src="../assets/pkb/ultraball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? ultraball : "?" }}</span>
                     </div>
                 </div>
                 <div class="pokeball">
-                    <img class="img-pokeball" src="../assets/pkb/masterball.png">
+                    <img @click="capture_masterball()" class="img-pokeball" src="../assets/pkb/masterball.png">
                     <div>
-                        <span>?</span>
+                        <span>{{started === true ? masterball : "?" }}</span>
                     </div>
                 </div>
-            </div>
-            <div id="control-div">
-                <v-btn size="x-large">Start</v-btn>
-            </div>
-        </div>
+            </v-col>
+            <v-col cols="12" class="control-div" v-if="!started && !finished">
+                <v-btn class="btn-size" @click="start()">Começar</v-btn>
+            </v-col>
+            <v-col cols="12" class="control-div" v-else-if="started && !finished">
+                <v-btn class="btn-size" @click="nextRound()">Próximo</v-btn>
+                <v-btn class="btn-size" @click="finish()">Finalizar</v-btn>
+            </v-col>
+            <v-col cols="12" class="control-div" v-else>
+                <v-btn class="btn-size" @click="start()">Recomeçar</v-btn>
+                <v-btn class="btn-size">Ver pokemons</v-btn>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
 <style scoped>
+/* esse é o style principal da tela de aventuras */
 .container {
     height: 95%;
     width: 100%;
 }
+</style>
+
+<style scoped>
+/* adventure */
+
 #adventure {
     height: 70%;
 }
 #alerts {
+    position: relative;
     display: flex;
     height: 20%;
     justify-content: center;
@@ -74,8 +284,13 @@ onBeforeMount(async () => {
     font-size: 25px;
     text-align: center;
 }
+#round {
+    position: absolute;
+    left: 20px;
+}
 #container_pkm {
     display: flex;
+    position: relative;
     height: 80%;
     justify-content: center;
     align-items: center;
@@ -90,8 +305,32 @@ onBeforeMount(async () => {
     border-radius: 100px;
     object-fit: cover;
 }
+.pkm_size {
+    height: 250px;
+    width: auto;
+    margin: 50px;
+}
+.background-pkm {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 80%;
+    width: 50%;
+    background-image: url("../assets/pkmground.png");
+    background-size: 100% 100%;
+    border-radius: 50px;
+}
+
+</style>
+
+<style scoped>
+/* parte das pokebolas */
 #div-pokeballs {
     height: 30%;
+    display: flex;
+    justify-content: center;
 }
 #pokeballs {
     height: 60%;
@@ -106,6 +345,12 @@ onBeforeMount(async () => {
 .img-pokeball {
     height: 70%;
 }
+.img-pokeball:hover {
+    cursor: pointer;
+}
+.img-pokeball:active {
+  height: 80%;
+}
 .pokeball div {
     margin-top: 5px;
     background-color: white;
@@ -116,60 +361,110 @@ onBeforeMount(async () => {
     color: black;
     font-size: 20px;
 }
-#control-div {
+.control-div {
     height: 40%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-around;
 }
+.btn-size {
+    width: 150px;
+    height: 50px;
+    font-size:medium;
+}
+</style>
 
+<style scoped>
+/* esses são os media breakpoints */
 @media (min-width: 500px) and (max-width: 768px){
-#alerts {
-    font-size: 15px;
-}
-#main_pkm {
-    width: 90%;
-    height: 50%;
-}
-.img-pokeball {
-    height: 40%;
-}
-#control-div {
-    height: 30%;
-}
+    #alerts {
+        font-size: 15px;
+    }
+
+    @media (min-width: 500px) and (max-width: 600px) {
+        .alert {
+            position: absolute;
+            right: 25px;
+        }
+    }
+
+    #main_pkm {
+        width: 90%;
+        height: 50%;
+    }
+    .background-pkm {
+        height: 60%;
+        width: 90%;
+    }
+    .pkm_size {
+        height: 150px;
+    }
+    .img-pokeball {
+        height: 40%;
+    }
+    .img-pokeball:active {
+    height: 45%;
+    }
+    .control-div {
+        height: 30%;
+    }
+    .btn-size {
+        width: 120px;
+        height: 45px;
+        font-size: 12px;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px){
-#alerts {
-    font-size: 18px;
+    #alerts {
+        font-size: 18px;
+    }
+    #main_pkm {
+        width: 90%;
+        height: 70%;
+    }
+    .background-pkm {
+        height: 50%;
+        width: 60%;
+    }
+    .pkm_size {
+        height: 130px
+    }
+    @media (min-width: 950px) and (max-width: 1024px){
+        #main_pkm {
+            width: 85%;
+            height: 75%;
+        }
+        .background-pkm {
+            height: 60%;
+            width: 50%;
+        }
+    }
+    .img-pokeball {
+        height: 50%;
+    }
 }
-#main_pkm {
-    width: 90%;
-    height: 70%;
-}
-@media (min-width: 950px) and (max-width: 1024px){
-#main_pkm {
-    width: 85%;
-    height: 75%;
-}
-}
-.img-pokeball {
-    height: 50%;
-}
-}
+
 @media (min-width: 1024px) and (max-width: 1200px){
     #alerts {
-    font-size: 20px;
-}
-#main_pkm {
-    width: 75%;
-    height: 80%;
-}
-.img-pokeball {
-    height: 50%;
-}
-#control-div {
-    height: 30%;
-}
+        font-size: 20px;
+    }
+    #main_pkm {
+        width: 75%;
+        height: 80%;
+    }
+    .background-pkm {
+        height: 60%;
+        width: 50%;
+    }
+    .pkm_size {
+        height: 150px
+    }
+    .img-pokeball {
+        height: 50%;
+    }
+    .control-div {
+        height: 30%;
+    }
 }
 </style>
