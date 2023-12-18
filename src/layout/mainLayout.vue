@@ -1,7 +1,30 @@
 <script setup lang="ts">
-var username: string;
-function login(){
+import { useTrainerStore } from "@/stores/trainerStore"
+import { ref } from "vue";
 
+var username: string;
+const name = ref<string>()
+const time = ref<number>(0)
+const trainerStore = useTrainerStore()
+
+async function login(TrainerName: string){
+  const user = await trainerStore.findbyName(TrainerName)
+  if (user){
+    localStorage.setItem("idTrainer", user._id);
+    name.value = user.name
+    localStorage.setItem("name", name.value);
+    time.value = user.time.length
+    localStorage.setItem("time", time.value.toString())
+  }
+  else {
+    alert("Usuário não existe")
+  }
+}
+
+function logout(){
+  localStorage.clear()
+  name.value = undefined
+  time.value = 0
 }
 </script>
 <template>
@@ -33,15 +56,16 @@ function login(){
       </router-link>
     </v-col>
     <v-col cols="8" md="9" lg="10" xl="10" class="content">
-      <div class="bar-login" v-if="true">
-        <v-form @submit.prevent="login" class="bar-form">
+      <div class="bar-login" v-if="name === undefined">
+        <v-form @submit.prevent="login(username)" class="bar-form">
           <input v-model="username" type="text" placeholder="Nome" required class="custom-input">
           <v-btn color="red" type="submit">Login</v-btn>
         </v-form>
       </div>
       <div class="bar" v-else>
-        <span>Treinador: A</span>
-        <span>Nº de pokémons: 0</span>
+        <span>Treinador: {{ name }}</span>
+        <span>Nº de pokémons: {{ time }}</span>
+        <v-btn color="red" @click="logout()">logout</v-btn>
       </div>
       <slot />
     </v-col>

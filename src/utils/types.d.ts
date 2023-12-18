@@ -7,3 +7,10 @@ export interface Pkm {
     sprite: string;
     type: string[];
 }
+
+export interface Trainer {
+    _id: ObjectId;
+    name: string;
+    sprite: string;
+    time: number[];
+}
