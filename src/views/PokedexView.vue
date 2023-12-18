@@ -7,7 +7,7 @@ const pkmStore = usePkmStore();
 
 //vars
 const pkms = ref<any>([]);
-const actualPkm = ref<number>(1);
+const actualPkm = ref<number>(0);
 const pkm = ref<any>({});
 
 onBeforeMount(async () => {
@@ -17,13 +17,13 @@ onBeforeMount(async () => {
 
 // Método para atualizar dados do Pokémon
 const updatePokemonData = () => {
-  pkm.value = pkms.value[actualPkm.value - 1]; // Ajuste do índice
+  pkm.value = pkms.value[actualPkm.value]; // Ajuste do índice
   console.log(pkm.value)
 };
 
 // Método para ir para o Pokémon anterior
 const prevPokemon = () => {
-  if (actualPkm.value > 1) {
+  if (actualPkm.value > 0) {
     actualPkm.value--;
     updatePokemonData();
   }
@@ -31,7 +31,7 @@ const prevPokemon = () => {
 
 // Método para ir para o próximo Pokémon
 const nextPokemon = () => {
-  if (actualPkm < pkms.value.length) {
+  if (actualPkm.value < 150) {
     actualPkm.value++;
     updatePokemonData();
   }
@@ -77,7 +77,7 @@ main {
   position: absolute;
   bottom: 55%;
   left: 50%;
-  transform: translate(-63%, 20%);
+  transform: translate(-63%, 20%) scale(1.3);
   height: 18%;
 }
 
