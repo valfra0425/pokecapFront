@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTrainerStore } from "@/stores/trainerStore"
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 var username: string;
 const name = ref<string>('')
@@ -8,7 +8,7 @@ const time = ref<number>(0)
 
 if (localStorage.getItem("name")) {
   name.value = localStorage.getItem("name") as string
-  time.value = parseInt(localStorage.getItem("time") as string, 10)
+  time.value = parseInt(localStorage.getItem("time") as string)
 }
 const trainerStore = useTrainerStore()
 
@@ -31,6 +31,18 @@ function logout(){
   name.value = ''
   time.value = 0
 }
+
+const minhaFuncao = () => {
+  setInterval(() => {
+    let val = parseInt(localStorage.getItem("time")!)
+    if (val != null){
+      time.value = val;
+    }
+  }, 1000); // A função será chamada a cada 1 segundo
+}
+
+onMounted(minhaFuncao);
+
 </script>
 <template>
   <v-row class="container">

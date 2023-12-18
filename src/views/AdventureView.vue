@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue"
+import { ref, onBeforeMount} from "vue"
 import { usePkmStore } from "@/stores/pkmStore"
+import { useTrainerStore } from "@/stores/trainerStore"
+import type { Trainer, Pkm } from '../utils/types'
 
 // função para conseguir um inteiro aleatorio 
 function randInt(min: number, max: number): number {
@@ -27,15 +29,16 @@ async function awaitPkm(): Promise<void> {
 
 // store
 const pkmStore = usePkmStore();
+const trainerStore = useTrainerStore();
 
 onBeforeMount(async () => {
     // pkm não pode estar vazio ao iniciar
     getPkm()
 })
 
-
 // variaveis da página
-var pkm = ref<any>(null);
+var pkm = ref<Pkm>();
+var trainer = ref<Trainer>();
 var qtdRounds = ref<number>(0)
 var atualRound = ref<number>(0)
 var pokeball = ref<number>(0)
@@ -48,12 +51,15 @@ var captured = ref<boolean>(false)
 var failed = ref<boolean>(false)
 var timeOut = false
 
+async function getTrainer(){
+    trainer.value = await trainerStore.findbyName(localStorage.getItem("name")!)
+}
+
 async function getPkm() {
     let pkm1 = (await pkmStore.getPkm(randInt(1, 151)))
     let pkm2 = (await pkmStore.getPkm(randInt(1, 151)))
     let pkm3 = (await pkmStore.getPkm(randInt(1, 151)))
     let pkm4 = (await pkmStore.getPkm(randInt(1, 151)))
-
 
     pkm.value = pkm1
     await awaitPkm()
@@ -65,6 +71,7 @@ async function getPkm() {
 }
 
 function start() {
+    getTrainer()
     getPkm()
     qtdRounds.value = randInt(6, 12);
     atualRound.value = 1;
@@ -102,6 +109,20 @@ function verifyPkb(){
 async function captured_pkm(){
     captured.value = true
     failed.value = false
+    if (trainer.value){
+        trainer.value.time.push(pkm.value?.id || 0)
+        let new_time = trainer.value.time
+        const updateTrainer: Trainer = {
+            _id: trainer.value._id,
+            name: trainer.value.name,
+            sprite: trainer.value.sprite,
+            time: new_time
+        }
+        let response = await trainerStore.UpdateTrainer(trainer.value._id, updateTrainer)
+        if (response){
+            localStorage.setItem("time", new_time.length.toString())
+        }
+    }
     await awaitOnesecond();
     captured.value = false
 }
@@ -210,11 +231,11 @@ async function capture_masterball() {
                 </div>
             </div>
             <div id="container_pkm">
-                <div v-if="!started || finished" id="main_pkm">
+                <div v-if="(!started || finished) && pkm?.sprite" id="main_pkm">
                     <img class="img_pkm" src="../assets/adventure.png">
                 </div>
                 <div class="background-pkm" v-else>
-                    <img class="pkm_size" :src="pkm.sprite"> 
+                    <img class="pkm_size" :src="pkm?.sprite"> 
                 </div>
             </div>
         </div>
