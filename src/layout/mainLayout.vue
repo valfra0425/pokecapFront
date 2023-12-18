@@ -1,5 +1,37 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useTrainerStore } from "@/stores/trainerStore"
+import { ref } from "vue";
 
+var username: string;
+const name = ref<string>('')
+const time = ref<number>(0)
+
+if (localStorage.getItem("name")) {
+  name.value = localStorage.getItem("name") as string
+  time.value = parseInt(localStorage.getItem("time") as string, 10)
+}
+const trainerStore = useTrainerStore()
+
+async function login(TrainerName: string){
+  const user = await trainerStore.findbyName(TrainerName)
+  if (user){
+    localStorage.setItem("idTrainer", user._id);
+    name.value = user.name
+    localStorage.setItem("name", name.value);
+    time.value = user.time.length
+    localStorage.setItem("time", time.value.toString())
+  }
+  else {
+    alert("Usuário não existe")
+  }
+}
+
+function logout(){
+  localStorage.clear()
+  name.value = ''
+  time.value = 0
+}
+</script>
 <template>
   <v-row class="container">
     <v-col cols="4" md="3" lg="2" xl="2" class="bara-lateral">
@@ -29,9 +61,16 @@
       </router-link>
     </v-col>
     <v-col cols="8" md="9" lg="10" xl="10" class="content">
-      <div class="bar">
-        <span>Treinador: A</span>
-        <span>Nº de pokémons: 0</span>
+      <div class="bar-login" v-if="name === ''">
+        <v-form @submit.prevent="login(username)" class="bar-form">
+          <input v-model="username" type="text" placeholder="Nome" required class="custom-input">
+          <v-btn color="red" type="submit">Login</v-btn>
+        </v-form>
+      </div>
+      <div class="bar" v-else>
+        <span>Treinador: {{ name }}</span>
+        <span>Nº de pokémons: {{ time }}</span>
+        <v-btn color="red" @click="logout()">logout</v-btn>
       </div>
       <slot />
     </v-col>
@@ -92,6 +131,26 @@
   background-color: #ffffff;
   color: #000000;
   height: 5%;
+}
+.bar-login {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  height: 5%;
+  padding-left: 10px;
+}
+.bar-form {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.custom-input {
+  width: 200px;
+  margin-right: 10px;
+  height: 100%;
+  font-size: medium;
 }
 
 @media (min-width: 500px) and (max-width: 768px) {
