@@ -13,16 +13,18 @@ export const useTrainerStore = defineStore('trainer', {
   getters: {},
   actions: {
     async findbyName(name: string): Promise<Trainer> {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/trainer/find/${name}`
-      );
-      this.trainer = response.data;
-      return this.trainer;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/trainer/find/${name}`)
+      this.trainer = response.data
+      return this.trainer
     },
     async getPokemonsByTrainer(id: string): Promise<Pkm[]> {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/trainer/${id}`)
       this.pokemons = response.data
       return this.pokemons
+    },
+    async UpdateTrainer(id: string, trainer: Trainer): Promise<Trainer> {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/trainer/${id}`, trainer)
+      return response.data
     }
   }
 })

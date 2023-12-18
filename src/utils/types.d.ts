@@ -14,3 +14,18 @@ export interface Trainer {
     sprite: string;
     time: number[];
 }
+
+export interface Pkb {
+    _id: ObjectId;
+    id: number
+    catch_rate: number;
+    owner: ObjectId;
+    qtd: number;
+}
+
+export interface PkbPut {
+    id: number;
+    catch_rate: number;
+    owner: ObjectId;
+    qtd: number;
+}
