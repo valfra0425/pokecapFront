@@ -47,7 +47,7 @@ onMounted(minhaFuncao);
 <template>
   <v-row class="container">
     <v-col cols="4" md="3" lg="2" xl="2" class="bara-lateral">
-      <router-link to="/">
+      <router-link to="/pokedex">
         <div class="div-lateral">
           <span>Pokedex</span>
           <div class="icon">

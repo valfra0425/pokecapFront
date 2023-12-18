@@ -51,6 +51,14 @@ const router = createRouter({
       meta: {
         layout: mainLayout,
       }
+    },
+    {
+      path: '/pokedex',
+      name: 'pokedex',
+      component: () => import('../views/PokedexView.vue'),
+      meta: {
+        layout: mainLayout,
+      }
     }
   ]
 })

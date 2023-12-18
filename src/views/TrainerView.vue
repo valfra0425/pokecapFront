@@ -7,16 +7,16 @@
         <h2>Escolha seu personagem</h2>
         <div class="trainers-container">
             <div class="trainer-box">
-                <img src="../assets/trainer_1.png" alt="Trainer number one">
+                <img src="../assets/trainers/trainer_1.png" alt="Trainer number one">
             </div>
             <div class="trainer-box">
-                <img src="../assets/trainer_2.png" alt="Trainer number one">
+                <img src="../assets/trainers/trainer_2.png" alt="Trainer number one">
             </div>
             <div class="trainer-box">
-                <img src="../assets/trainer_3.png" alt="Trainer number one">
+                <img src="../assets/trainers/trainer_3.png" alt="Trainer number one">
             </div>
             <div class="trainer-box">
-                <img src="../assets/trainer_4.png" alt="Trainer number one">
+                <img src="../assets/trainers/trainer_4.png" alt="Trainer number one">
             </div>
         </div>
         <div class="trainer-name">
