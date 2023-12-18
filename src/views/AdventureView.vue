@@ -3,7 +3,7 @@ import { ref, onBeforeMount} from "vue"
 import { usePkmStore } from "@/stores/pkmStore"
 import { useTrainerStore } from "@/stores/trainerStore"
 import { usePkbStore } from "@/stores/pkbStore"
-import type { Trainer, Pkm, Pkb, PkbPut } from '../utils/types'
+import type { Trainer, Pkm, PkbPut } from '../utils/types'
 
 // função para conseguir um inteiro aleatorio 
 function randInt(min: number, max: number): number {
