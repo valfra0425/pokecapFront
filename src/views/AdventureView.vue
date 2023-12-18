@@ -2,7 +2,8 @@
 import { ref, onBeforeMount} from "vue"
 import { usePkmStore } from "@/stores/pkmStore"
 import { useTrainerStore } from "@/stores/trainerStore"
-import type { Trainer, Pkm } from '../utils/types'
+import { usePkbStore } from "@/stores/pkbStore"
+import type { Trainer, Pkm, Pkb, PkbPut } from '../utils/types'
 
 // função para conseguir um inteiro aleatorio 
 function randInt(min: number, max: number): number {
@@ -30,6 +31,7 @@ async function awaitPkm(): Promise<void> {
 // store
 const pkmStore = usePkmStore();
 const trainerStore = useTrainerStore();
+const pkbStore = usePkbStore();
 
 onBeforeMount(async () => {
     // pkm não pode estar vazio ao iniciar
@@ -70,24 +72,49 @@ async function getPkm() {
     pkm.value = pkm4
 }
 
-function start() {
-    getTrainer()
-    getPkm()
+async function start() {
+    await getTrainer()
     qtdRounds.value = randInt(6, 12);
     atualRound.value = 1;
-    pokeball.value = randInt(1, 10);
-    greatball.value = randInt(0, 5);
-    ultraball.value = randInt(0, 3);
+    let pkb1_bank = await pkbStore.getPkb(1, trainer.value?._id)
+    pokeball.value = randInt(1, 10) + pkb1_bank.qtd;
+    let pkb2_bank = await pkbStore.getPkb(2, trainer.value?._id)
+    greatball.value = randInt(0, 5) + pkb2_bank.qtd;
+    let pkb3_bank = await pkbStore.getPkb(3, trainer.value?._id)
+    ultraball.value = randInt(0, 3) + pkb3_bank.qtd;
     masterball.value = (Math.random() <= 0.05 ? 1 : 0);
     started.value = true;
     finished.value = false
 }
 
-function finish(){
+async function finish(){
     finished.value = true
-    let pkb1 = Math.floor(pokeball.value / 2)
-    let pkb2 = Math.floor(greatball.value / 2)
-    let pkb3 = Math.floor(ultraball.value / 2)
+    let pkb1_bank = await pkbStore.getPkb(1, trainer.value?._id)
+    let pkb1: PkbPut = {
+        id: 1,
+        owner: trainer.value?._id,
+        qtd: (pkb1_bank.qtd || 0) + (Math.floor(pokeball.value / 2)),
+        catch_rate: 0.25
+    }
+    await pkbStore.putPkb(1, pkb1)
+
+    let pkb2_bank = await pkbStore.getPkb(2, trainer.value?._id)
+    let pkb2: PkbPut = {
+        id: 2,
+        owner: trainer.value?._id,
+        qtd: (pkb2_bank.qtd || 0) + (Math.floor(greatball.value / 2)),
+        catch_rate: 0.50
+    }
+    await pkbStore.putPkb(2, pkb2)
+
+    let pkb3_bank = await pkbStore.getPkb(3, trainer.value?._id)
+    let pkb3: PkbPut = {
+        id: 3,
+        owner: trainer.value?._id,
+        qtd: (pkb3_bank.qtd || 0) + (Math.floor(ultraball.value / 2)),
+        catch_rate: 0.75
+    }
+    await pkbStore.putPkb(3, pkb3)
 }
 
 function nextRound(){
