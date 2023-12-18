@@ -3,8 +3,13 @@ import { useTrainerStore } from "@/stores/trainerStore"
 import { ref } from "vue";
 
 var username: string;
-const name = ref<string>()
+const name = ref<string>('')
 const time = ref<number>(0)
+
+if (localStorage.getItem("name")) {
+  name.value = localStorage.getItem("name") as string
+  time.value = parseInt(localStorage.getItem("time") as string, 10)
+}
 const trainerStore = useTrainerStore()
 
 async function login(TrainerName: string){
@@ -23,7 +28,7 @@ async function login(TrainerName: string){
 
 function logout(){
   localStorage.clear()
-  name.value = undefined
+  name.value = ''
   time.value = 0
 }
 </script>
@@ -56,7 +61,7 @@ function logout(){
       </router-link>
     </v-col>
     <v-col cols="8" md="9" lg="10" xl="10" class="content">
-      <div class="bar-login" v-if="name === undefined">
+      <div class="bar-login" v-if="name === ''">
         <v-form @submit.prevent="login(username)" class="bar-form">
           <input v-model="username" type="text" placeholder="Nome" required class="custom-input">
           <v-btn color="red" type="submit">Login</v-btn>
