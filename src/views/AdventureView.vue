@@ -302,7 +302,7 @@ async function capture_masterball() {
             </v-col>
             <v-col cols="12" class="control-div" v-else>
                 <v-btn class="btn-size" @click="start()">Recomeçar</v-btn>
-                <v-btn class="btn-size">Ver pokemons</v-btn>
+                <v-btn class="btn-size" to="/pokemons">Ver pokemons</v-btn>
             </v-col>
         </v-row>
     </div>
