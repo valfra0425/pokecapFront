@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import mainLayout from '../layout/mainLayout.vue'
 import StartView from '../views/StartView.vue'
 import PokemonViews from '@/views/PokemonView.vue'
@@ -9,19 +8,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-      meta: {
-        layout: mainLayout
-      }
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue'),
-      meta: {
-        layout: mainLayout
-      }
+      name: 'start',
+      component: StartView,
     },
     {
       path: '/adventure',
@@ -30,11 +18,6 @@ const router = createRouter({
       meta: {
         layout: mainLayout
       }
-    },
-    {
-      path: '/start',
-      name: 'start',
-      component: StartView
     },
     {
       path: '/pokemons',

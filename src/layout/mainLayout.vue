@@ -5,6 +5,8 @@ import { ref, onMounted } from "vue";
 var username: string;
 const name = ref<string>('')
 const time = ref<number>(0)
+const logged = ref<boolean>(false)
+logged.value = (localStorage.getItem("idTrainer") ? true : false)
 
 if (localStorage.getItem("name")) {
   name.value = localStorage.getItem("name") as string
@@ -35,6 +37,7 @@ function logout(){
 const minhaFuncao = () => {
   setInterval(() => {
     let val = parseInt(localStorage.getItem("time")!)
+    logged.value = (localStorage.getItem("idTrainer") ? true : false)
     if (val != null){
       time.value = val;
     }
@@ -55,7 +58,7 @@ onMounted(minhaFuncao);
           </div>
         </div>
       </router-link>
-      <router-link to="/adventure">
+      <router-link to="/adventure" v-if="logged">
         <div class="div-lateral">
           <span>Aventura</span>
           <div class="icon">
@@ -63,7 +66,7 @@ onMounted(minhaFuncao);
           </div>
         </div>
       </router-link>
-      <router-link to="/pokemons">
+      <router-link to="/pokemons" v-if="logged">
         <div class="div-lateral">
           <span>Pokémons</span>
           <div class="icon">

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Pkm, Trainer } from '../utils/types'
 import axios from 'axios'
+import { usePkmStore } from './pkmStore'
 
 export const useTrainerStore = defineStore('trainer', {
   state: () => {
@@ -19,7 +20,10 @@ export const useTrainerStore = defineStore('trainer', {
     },
     async getPokemonsByTrainer(id: string): Promise<Pkm[]> {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/trainer/${id}`)
-      this.pokemons = response.data
+      const pkmStore = usePkmStore()
+      response.data.time.map(async (pkm: number) => {
+        this.pokemons.push(await pkmStore.getPkm(pkm))
+      })
       return this.pokemons
     },
     async CreateTrainer(trainer: Trainer): Promise<Trainer> {

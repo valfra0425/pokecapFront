@@ -9,7 +9,7 @@
     </v-row>
     <v-row justify="center" class="text-center">
       <v-col cols="12">
-        <v-btn color="#006EB9" size="large" elevation="8" class="border-button" to="/"
+        <v-btn color="#006EB9" size="large" elevation="8" class="border-button" to="/trainer"
           >Iniciar</v-btn
         >
       </v-col>

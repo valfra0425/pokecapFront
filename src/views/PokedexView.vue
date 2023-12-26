@@ -18,7 +18,6 @@ onBeforeMount(async () => {
 // Método para atualizar dados do Pokémon
 const updatePokemonData = () => {
   pkm.value = pkms.value[actualPkm.value]; // Ajuste do índice
-  console.log(pkm.value)
 };
 
 // Método para ir para o Pokémon anterior
