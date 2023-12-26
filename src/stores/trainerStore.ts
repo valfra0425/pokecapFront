@@ -22,6 +22,10 @@ export const useTrainerStore = defineStore('trainer', {
       this.pokemons = response.data
       return this.pokemons
     },
+    async CreateTrainer(trainer: Trainer): Promise<Trainer> {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/trainer`, trainer)
+      return response.data
+    },
     async UpdateTrainer(id: string, trainer: Trainer): Promise<Trainer> {
       const response = await axios.put(`${import.meta.env.VITE_API_URL}/trainer/${id}`, trainer)
       return response.data
