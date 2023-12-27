@@ -21,9 +21,15 @@ export const useTrainerStore = defineStore('trainer', {
     async getPokemonsByTrainer(id: string): Promise<Pkm[]> {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/trainer/${id}`)
       const pkmStore = usePkmStore()
-      response.data.time.map(async (pkm: number) => {
-        this.pokemons.push(await pkmStore.getPkm(pkm))
-      })
+      if (this.pokemons.length == Number(localStorage.getItem("time"))){
+        return this.pokemons
+      }
+      else {
+        this.pokemons = []
+        response.data.time.map(async (pkm: number) => {
+          this.pokemons.push(await pkmStore.getPkm(pkm))
+        })
+      }
       return this.pokemons
     },
     async CreateTrainer(trainer: Trainer): Promise<Trainer> {

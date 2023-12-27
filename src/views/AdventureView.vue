@@ -77,11 +77,18 @@ async function start() {
     qtdRounds.value = randInt(6, 12);
     atualRound.value = 1;
     let pkb1_bank = await pkbStore.getPkb(1, trainer.value?._id)
-    pokeball.value = randInt(1, 10) + pkb1_bank.qtd;
     let pkb2_bank = await pkbStore.getPkb(2, trainer.value?._id)
-    greatball.value = randInt(0, 5) + pkb2_bank.qtd;
     let pkb3_bank = await pkbStore.getPkb(3, trainer.value?._id)
-    ultraball.value = randInt(0, 3) + pkb3_bank.qtd;
+    if (pkb1_bank && pkb2_bank && pkb3_bank){
+        pokeball.value = randInt(1, 10) + pkb1_bank.qtd;
+        greatball.value = randInt(0, 5) + pkb2_bank.qtd;
+        ultraball.value = randInt(0, 3) + pkb3_bank.qtd;
+    }
+    else {
+        pokeball.value = randInt(1, 10);
+        greatball.value = randInt(0, 5);
+        ultraball.value = randInt(0, 3);
+    }
     masterball.value = (Math.random() <= 0.05 ? 1 : 0);
     started.value = true;
     finished.value = false
