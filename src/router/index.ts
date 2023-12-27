@@ -16,7 +16,8 @@ const router = createRouter({
       name: 'adventure',
       component: () => import('../views/AdventureView.vue'),
       meta: {
-        layout: mainLayout
+        layout: mainLayout,
+        auth: true
       }
     },
     {
@@ -24,7 +25,8 @@ const router = createRouter({
       name: 'pokemons',
       component: PokemonViews,
       meta: {
-        layout: mainLayout
+        layout: mainLayout,
+        auth: true
       }
     },
     {
@@ -33,6 +35,7 @@ const router = createRouter({
       component: () => import('../views/TrainerView.vue'),
       meta: {
         layout: mainLayout,
+        auth: false
       }
     },
     {
@@ -40,10 +43,26 @@ const router = createRouter({
       name: 'pokedex',
       component: () => import('../views/PokedexView.vue'),
       meta: {
-        layout: mainLayout,
+        layout: mainLayout
       }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const name = localStorage.getItem("name")
+  if (!name && to.meta?.auth){
+    router.push("/trainer")
+  }
+  else if (to.name == 'pokedex' ){
+    next()
+  }
+  else if (name && !to.meta?.auth) {
+    router.push("/pokedex")
+  }
+  else {
+    next()
+  }
 })
 
 export default router

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTrainerStore } from "@/stores/trainerStore"
 import { ref, onMounted } from "vue";
+import router from '@/router';
 
 var username: string;
 const name = ref<string>('')
@@ -22,6 +23,7 @@ async function login(TrainerName: string){
     localStorage.setItem("name", name.value);
     time.value = user.time.length
     localStorage.setItem("time", time.value.toString())
+    router.push("/pokedex")
   }
   else {
     alert("Usuário não existe")
@@ -32,6 +34,7 @@ function logout(){
   localStorage.clear()
   name.value = ''
   time.value = 0
+  router.push("/pokedex")
 }
 
 const minhaFuncao = () => {
@@ -145,7 +148,6 @@ onMounted(minhaFuncao);
   align-items: center;
   background-color: #ffffff;
   color: #000000;
-  height: 5%;
 }
 .bar-login {
   display: flex;
@@ -153,7 +155,6 @@ onMounted(minhaFuncao);
   align-items: center;
   background-color: #ffffff;
   color: #000000;
-  height: 5%;
   padding-left: 10px;
 }
 .bar-form {
